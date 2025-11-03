@@ -1,5 +1,8 @@
-<!doctype html>
+<script>
+  document.body.style.visibility = 'hidden';
+</script>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -81,7 +84,74 @@
       }
     }
   </style>
-<body>
+<body><!-- Control.INC® Secure Intro Animation with Sound -->
+<div id="introScreen">
+  <div class="introContent">
+    <img src="assets/control_inc_logo.jpeg" alt="Control.INC Logo" class="introLogo">
+    <p class="introText">System Secure Sync Active</p>
+  </div>
+  <audio id="introSound" src="assets/startup_accel.mp3" preload="auto"></audio>
+</div>
+
+<style>
+  #introScreen {
+    position: fixed;
+    inset: 0;
+    background: #FFFAFA;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+    transition: opacity 1s ease;
+  }
+
+  .introLogo {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+  }
+
+  .introText {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    color: #8B0000;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  body.loaded #introScreen {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  window.addEventListener('load', () => {
+    const sound = document.getElementById('introSound');
+    sound.volume = 0.8;
+    sound.play().catch(() => {}); // start quietly even if autoplay is restricted
+
+    setTimeout(() => {
+      // fade sound out gradually
+      const fade = setInterval(() => {
+        if (sound.volume > 0.05) {
+          sound.volume -= 0.05;
+        } else {
+          sound.pause();
+          clearInterval(fade);
+        }
+      }, 150);
+      }, 150);
+
+document.body.style.visibility = 'visible';  // ✅ show site after intro
+document.body.classList.add('loaded');
+
+}, 2500);
+  });
+</script>
+<!-- End Control.INC® Intro -->
   <main class="main-section">
     <h1>Vino Auto BenchLab®</h1>
     <p>Enter VIN to Begin Diagnostics</p>

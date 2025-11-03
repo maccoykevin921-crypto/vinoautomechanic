@@ -217,4 +217,18 @@
 </script>
 
 </body>
+<!-- Control.INC® Render Secure Sync Verification -->
+<footer id="syncFooter" style="text-align:center;margin-top:40px;font-family:'Helvetica Neue',Arial,sans-serif;color:#FFFAFA;background:#1C1C1E;padding:14px 0;font-size:13px;letter-spacing:0.4px;border-top:2px solid #8B0000;">
+  🔒 Control.INC® Secure Sync Active — vinoautomechanic.com linked to Render Cloud
+</footer>
+<script>
+  // Optional live check animation (shows fade glow briefly after load)
+  window.addEventListener('load', () => {
+    const f = document.getElementById('syncFooter');
+    f.style.transition = 'all 1.5s ease';
+    f.style.boxShadow = '0 0 10px #8B0000';
+    setTimeout(()=>{f.style.boxShadow='none';},2000);
+  });
+</script>
+<!-- End Verification -->
 </html>

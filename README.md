@@ -18,7 +18,15 @@
       --panel: #2a2a2b;
       --glass: rgba(255,255,255,0.03);
     }
+/* ✅ Fade-in effect */
+body {
+  opacity: 0;
+  transition: opacity 1.8s ease-in;
+}
 
+body.loaded {
+  opacity: 1;
+}
     html, body {
       height: 100%;
       width: 100%;

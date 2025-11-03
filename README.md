@@ -21,7 +21,7 @@
 /* ✅ Fade-in effect */
 body {
   opacity: 0;
-  transition: opacity 1.8s ease-in;
+  transition: opacity 2.5s ease-in;
 }
 
 body.loaded {
@@ -183,5 +183,15 @@ document.body.classList.add('loaded');
       }
     });
   </script>
+</body></script>
+
+<script>
+window.addEventListener('beforeunload', () => {
+  document.body.style.transition = 'opacity 0.8s ease-out';
+  document.body.style.opacity = '0';
+});
+</script>
+
 </body>
+</html>
 </html>

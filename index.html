@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>0EMlink Parts™</title>
+
+<style>
+body {
+  margin:0;
+  font-family:sans-serif;
+  background:#1C1C1E;
+  color:#FFFAFA;
+}
+
+.container {
+  max-width:900px;
+  margin:auto;
+  padding:25px;
+}
+
+.title {
+  text-align:center;
+  color:#8B0000;
+  font-size:28px;
+}
+
+.subtitle {
+  text-align:center;
+  margin-bottom:20px;
+}
+
+input {
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:none;
+  background:#2a2a2e;
+  color:#fff;
+  font-size:16px;
+}
+
+button {
+  width:100%;
+  padding:14px;
+  margin-top:15px;
+  border:none;
+  border-radius:10px;
+  background:#8B0000;
+  color:#fff;
+  font-size:16px;
+}
+
+.status {
+  text-align:center;
+  margin-top:15px;
+  font-size:14px;
+  color:#aaa;
+}
+
+.vehicle {
+  text-align:center;
+  margin-top:20px;
+  font-size:18px;
+}
+
+.card {
+  background:#2a2a2e;
+  padding:15px;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.whatsapp {
+  background:#25D366;
+  color:#fff;
+  padding:8px 12px;
+  border-radius:6px;
+  text-decoration:none;
+  display:inline-block;
+  margin-top:10px;
+}
+
+.quote-btn {
+  background:#8B0000;
+  color:#fff;
+  margin-left:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1 class="title">0EMlink Parts™</h1>
+  <p class="subtitle">Find Exact Spare Parts Using VIN – No Guesswork</p>
+
+  <input id="vinInput" type="text" placeholder="Enter VIN Number">
+  <button onclick="findParts()">Find My Parts</button>
+
+  <div id="statusText" class="status"></div>
+  <div id="vehicleTitle" class="vehicle"></div>
+  <div id="partsList"></div>
+
+</div>
+
+<script>
+
+async function findParts() {
+  const vin = document.getElementById("vinInput").value.trim();
+
+  if (!vin || vin.length < 6) {
+    document.getElementById("statusText").innerText = "⚠️ Enter valid VIN";
+    return;
+  }
+
+  document.getElementById("statusText").innerText = "🔍 Decoding VIN...";
+  document.getElementById("partsList").innerHTML = "";
+
+  try {
+
+    // 🔴 REPLACE WITH YOUR RENDER URL
+    const res = await fetch(`https://YOUR-RENDER-URL/api/vin?vin=${vin}`);
+    const data = await res.json();
+
+    if (!data || !data.make) throw new Error();
+
+    const vehicle = {
+      make: data.make,
+      model: data.model,
+      year: data.year,
+      engine: data.engine
+    };
+
+    document.getElementById("vehicleTitle").innerText =
+      `${vehicle.make} ${vehicle.model} ${vehicle.engine} (${vehicle.year})`;
+
+    document.getElementById("statusText").innerText = "✅ VIN Verified";
+
+    loadParts(vehicle, vin);
+
+  } catch (err) {
+
+    document.getElementById("statusText").innerText =
+      "⚠️ Limited results – showing compatible parts";
+
+    const fallback = {
+      make: "Generic",
+      model: "Vehicle",
+      year: "",
+      engine: ""
+    };
+
+    document.getElementById("vehicleTitle").innerText =
+      "Vehicle detected (Limited Mode)";
+
+    loadParts(fallback, vin);
+  }
+}
+
+
+// SMART PARTS LOGIC
+function loadParts(vehicle, vin) {
+
+  let parts = [];
+
+  if (vehicle.make.toLowerCase().includes("toyota")) {
+    parts = [
+      { name: "Oil Filter", oem: "90915-YZZD2", price: "R120" },
+      { name: "Air Filter", oem: "17801-0L040", price: "R250" },
+      { name: "Brake Pads", oem: "04465-0K240", price: "R850" },
+      { name: "Fuel Filter", oem: "23390-0L041", price: "R400" }
+    ];
+  } else if (vehicle.make.toLowerCase().includes("land rover")) {
+    parts = [
+      { name: "Oil Filter", oem: "LR011279", price: "R180" },
+      { name: "Air Filter", oem: "LR029078", price: "R350" },
+      { name: "Brake Pads", oem: "LR043714", price: "R1200" }
+    ];
+  } else {
+    parts = [
+      { name: "Service Kit", oem: "Generic", price: "Request Quote" }
+    ];
+  }
+
+  renderParts(parts, vin);
+}
+
+
+// RENDER PARTS
+function renderParts(parts, vin) {
+
+  let html = "";
+
+  parts.forEach(p => {
+
+    const msg = encodeURIComponent(
+      `Hi, I need ${p.name} for VIN: ${vin} (OEM: ${p.oem})`
+    );
+
+    html += `
+      <div class="card">
+        <h3>${p.name}</h3>
+        <p>OEM: ${p.oem}</p>
+        <p><strong>${p.price}</strong></p>
+
+        <a href="https://wa.me/27XXXXXXXXX?text=${msg}" target="_blank" class="whatsapp">
+          WhatsApp
+        </a>
+
+        <button class="quote-btn" onclick="requestQuote('${p.name}','${vin}')">
+          Quote
+        </button>
+      </div>
+    `;
+  });
+
+  document.getElementById("partsList").innerHTML = html;
+}
+
+
+// QUOTE
+function requestQuote(part, vin) {
+  alert(`Quote requested for ${part} (VIN: ${vin})`);
+}
+
+</script>
+
+</body>
+</html>
